@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Create Profile</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-4">
+  <button onclick="logout()" class="bg-red-500 text-white p-2 mb-4">Logout</button>
+  <h2 class="text-xl mb-4">Create Profile</h2>
+  <input id="name" placeholder="Name" class="border p-2 w-full mb-2"/>
+  <input id="age" type="number" placeholder="Age" class="border p-2 w-full mb-2"/>
+  <input id="caste" placeholder="Caste" class="border p-2 w-full mb-2"/>
+  <input id="location" placeholder="Location" class="border p-2 w-full mb-2"/>
+  <input id="profession" placeholder="Profession" class="border p-2 w-full mb-2"/>
+  <button onclick="saveProfile()" class="bg-blue-500 text-white p-2 w-full">Save Profile</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
