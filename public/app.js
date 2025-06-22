@@ -52,17 +52,41 @@ function saveProfile() {
     return;
   }
 
+  const file = document.getElementById("photo").files[0];
+  if (!file) {
+    alert("Please select a profile photo.");
+    return;
+  }
+
+
   db.collection("profiles").doc(user.uid).set({
     name: document.getElementById("name").value,
     age: parseInt(document.getElementById("age").value),
     caste: document.getElementById("caste").value,
     location: document.getElementById("location").value,
-    profession: document.getElementById("profession").value
+    profession: document.getElementById("profession").value,
+annualIncome: document.getElementById("annualIncome").value
   }).then(() => {
     alert("Profile saved");
     window.location = "profiles.html";
   }).catch(err => alert("Save failed: " + err.message));
+
+  const storageRef = storage.ref(`profile_pics/${user.uid}`);
+  storageRef.put(file)
+    .then(() => storageRef.getDownloadURL())
+    .then(url => {
+      profileData.photoURL = url;
+      return db.collection("profiles").doc(user.uid).set(profileData);
+    })
+    .then(() => {
+      alert("Profile saved");
+      window.location = "profiles.html";
+    })
+    .catch(err => alert("Save failed: " + err.message));
 }
+
+
+
 
 // Load profiles and setup DataTable
 function loadProfiles() {
@@ -71,20 +95,47 @@ function loadProfiles() {
       let rows = "";
       snapshot.forEach(doc => {
         const p = doc.data();
-        rows += `<tr>
-          <td>${p.name}</td>
-          <td>${p.age}</td>
-          <td>${p.caste}</td>
-          <td>${p.location}</td>
-          <td>${p.profession}</td>
-        </tr>`;
+      rows += `<tr>
+      <td><img src="${p.photoURL}" alt="pic" class="w-10 h-10 rounded-full"/></td>
+  <td>${p.name}</td>
+  <td>${p.age}</td>
+  <td>${p.caste}</td>
+  <td>${p.location}</td>
+  <td>${p.profession}</td>
+  <td>${p.annualIncome || ''}</td>
+</tr>`;
       });
       document.getElementById("profilesBody").innerHTML = rows;
-      $('#profilesTable').DataTable({
-        responsive: true
-      });
+      initializeTable();
     })
     .catch(err => alert("Failed to load profiles: " + err.message));
+}
+
+// ── NEW: DataTables initializer ──────────────────────────────────────
+function initializeTable() {
+  $('#profilesTable').DataTable({
+    responsive: true,
+    pageLength: 10,
+    lengthMenu: [5, 10, 20]
+  });
+}
+
+
+// AUTO-POPULATE "My Profile" FORM
+if (location.pathname.includes("profile.html")) {
+  auth.onAuthStateChanged(user => {
+    if (!user) return location.href = "index.html";
+    db.collection("profiles").doc(user.uid).get()
+      .then(doc => {
+        if (doc.exists) {
+          const d = doc.data();
+          ["name","age","caste","location","profession","annualIncome"].forEach(id => {
+            document.getElementById(id).value = d[id] || "";
+          });
+        }
+      })
+      .catch(err => console.error("Error fetching profile:", err));
+  });
 }
 
 // Auth checks — protect pages
