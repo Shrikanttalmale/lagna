@@ -1,12 +1,12 @@
 // Firebase config — fully corrected
 const firebaseConfig = {
-  apiKey: "AIzaSyBfltPGAo5ISaePreDsH5b65sWPM7rNqMo",
-  authDomain: "lagna-app-cloud.firebaseapp.com",
-  projectId: "lagna-app-cloud",
-  storageBucket: "lagna-app-cloud.firebasestorage.app",
-  messagingSenderId: "257751969453",
-  appId: "1:257751969453:web:dbca2d7e511fcf0e4d6024",
-  measurementId: "G-S3BXV6N2FB"
+  apiKey: "ArNqMo",
+  authDomain: "lagncom",
+  projectId: "lagloud",
+  storageBucket: "lae.app",
+  messagingSenderId: "259453",
+  appId: "",
+  measurementId: "GFB"
 };
 
 console.log(firebaseConfig);
