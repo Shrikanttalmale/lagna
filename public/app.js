@@ -1,13 +1,21 @@
+// Firebase config — fully corrected
 const firebaseConfig = {
-  apiKey: "YOUR-API-KEY",
-  authDomain: "YOUR-PROJECT-ID.firebaseapp.com",
-  projectId: "YOUR-PROJECT-ID",
-  storageBucket: "YOUR-PROJECT-ID.appspot.com",
-  messagingSenderId: "YOUR-SENDER-ID",
-  appId: "YOUR-APP-ID"
+  apiKey: "AIzaSyBfltPGAo5ISaePreDsH5b65sWPM7rNqMo",
+  authDomain: "lagna-app-cloud.firebaseapp.com",
+  projectId: "lagna-app-cloud",
+  storageBucket: "lagna-app-cloud.firebasestorage.app",
+  messagingSenderId: "257751969453",
+  appId: "1:257751969453:web:dbca2d7e511fcf0e4d6024",
+  measurementId: "G-S3BXV6N2FB"
 };
+
+console.log(firebaseConfig);
+
+
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 
+// Initialize services
 const auth = firebase.auth();
 const db = firebase.firestore();
 
@@ -17,7 +25,7 @@ function login() {
   const pass = document.getElementById("password").value;
   auth.signInWithEmailAndPassword(email, pass)
     .then(() => window.location = "profiles.html")
-    .catch(err => alert(err.message));
+    .catch(err => alert("Login failed: " + err.message));
 }
 
 // Register
@@ -26,12 +34,14 @@ function register() {
   const pass = document.getElementById("password").value;
   auth.createUserWithEmailAndPassword(email, pass)
     .then(() => window.location = "profile.html")
-    .catch(err => alert(err.message));
+    .catch(err => alert("Registration failed: " + err.message));
 }
 
 // Logout
 function logout() {
-  auth.signOut().then(() => window.location = "index.html");
+  auth.signOut()
+    .then(() => window.location = "index.html")
+    .catch(err => alert("Logout failed: " + err.message));
 }
 
 // Save profile
@@ -41,6 +51,7 @@ function saveProfile() {
     alert("Not logged in");
     return;
   }
+
   db.collection("profiles").doc(user.uid).set({
     name: document.getElementById("name").value,
     age: parseInt(document.getElementById("age").value),
@@ -50,31 +61,33 @@ function saveProfile() {
   }).then(() => {
     alert("Profile saved");
     window.location = "profiles.html";
-  }).catch(err => alert(err.message));
+  }).catch(err => alert("Save failed: " + err.message));
 }
 
 // Load profiles and setup DataTable
 function loadProfiles() {
-  db.collection("profiles").get().then(snapshot => {
-    let rows = "";
-    snapshot.forEach(doc => {
-      const p = doc.data();
-      rows += `<tr>
-        <td>${p.name}</td>
-        <td>${p.age}</td>
-        <td>${p.caste}</td>
-        <td>${p.location}</td>
-        <td>${p.profession}</td>
-      </tr>`;
-    });
-    document.getElementById("profilesBody").innerHTML = rows;
-    $('#profilesTable').DataTable({
-      responsive: true
-    });
-  });
+  db.collection("profiles").get()
+    .then(snapshot => {
+      let rows = "";
+      snapshot.forEach(doc => {
+        const p = doc.data();
+        rows += `<tr>
+          <td>${p.name}</td>
+          <td>${p.age}</td>
+          <td>${p.caste}</td>
+          <td>${p.location}</td>
+          <td>${p.profession}</td>
+        </tr>`;
+      });
+      document.getElementById("profilesBody").innerHTML = rows;
+      $('#profilesTable').DataTable({
+        responsive: true
+      });
+    })
+    .catch(err => alert("Failed to load profiles: " + err.message));
 }
 
-// Auth checks
+// Auth checks — protect pages
 if (document.location.pathname.includes("index.html")) {
   auth.onAuthStateChanged(user => {
     if (user) window.location = "profiles.html";
