@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Matrimony - Login</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="p-4">
+  <h2 class="text-xl mb-4">Login / Register</h2>
+  <input id="email" type="email" placeholder="Email" class="border p-2 w-full mb-2"/>
+  <input id="password" type="password" placeholder="Password" class="border p-2 w-full mb-2"/>
+  <button onclick="login()" class="bg-blue-500 text-white p-2 w-full mb-2">Login</button>
+  <button onclick="register()" class="bg-green-500 text-white p-2 w-full">Register</button>
+
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
